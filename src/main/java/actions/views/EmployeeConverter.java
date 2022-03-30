@@ -8,7 +8,7 @@ import constants.JpaConst;
 import models.Employee;
 
 /**
- * 従業員データのDTOモデル⇄Viewモデルの変換を行うクラス
+ * 従業員データのDTOモデル⇔Viewモデルの変換を行うクラス
  *
  */
 public class EmployeeConverter {
@@ -40,9 +40,9 @@ public class EmployeeConverter {
     }
 
     /**
-     *  DTOモデルのインスタンスからViewモデルのインスタンスを作成する
-     *  @param e Employeeのインスタンス
-     *  @return EmployeeViewのインスタンス
+     * DTOモデルのインスタンスからViewモデルのインスタンスを作成する
+     * @param e Employeeのインスタンス
+     * @return EmployeeViewのインスタンス
      */
     public static EmployeeView toView(Employee e) {
 
@@ -65,8 +65,8 @@ public class EmployeeConverter {
                 e.getDeleteFlag() == null
                         ? null
                         : e.getDeleteFlag() == JpaConst.EMP_DEL_TRUE
-                        ? AttributeConst.DEL_FLAG_TRUE.getIntegerValue()
-                        : AttributeConst.DEL_FLAG_FALSE.getIntegerValue());
+                                ? AttributeConst.DEL_FLAG_TRUE.getIntegerValue()
+                                : AttributeConst.DEL_FLAG_FALSE.getIntegerValue());
     }
 
     /**
@@ -74,19 +74,20 @@ public class EmployeeConverter {
      * @param list DTOモデルのリスト
      * @return Viewモデルのリスト
      */
-    public static List<EmployeeView> toViewList(List<Employee> list){
+    public static List<EmployeeView> toViewList(List<Employee> list) {
         List<EmployeeView> evs = new ArrayList<>();
 
-        for(Employee e : list) {
+        for (Employee e : list) {
             evs.add(toView(e));
         }
+
         return evs;
     }
 
     /**
-     *  Viewモデルの全フィールドの内容をDTOモデルのフィールドにコピーする
-     *  @param e DTOモデル（コピー先）
-     *  @param ev Viewモデル（コピー先）
+     * Viewモデルの全フィールドの内容をDTOモデルのフィールドにコピーする
+     * @param e DTOモデル(コピー先)
+     * @param ev Viewモデル(コピー元)
      */
     public static void copyViewToModel(Employee e, EmployeeView ev) {
         e.setId(ev.getId());
@@ -97,5 +98,7 @@ public class EmployeeConverter {
         e.setCreatedAt(ev.getCreatedAt());
         e.setUpdatedAt(ev.getUpdatedAt());
         e.setDeleteFlag(ev.getDeleteFlag());
+
     }
+
 }
