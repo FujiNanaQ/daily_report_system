@@ -19,7 +19,7 @@ public interface JpaConst {
     String EMP_COL_ID = "id";   // id
     String EMP_COL_CODE = "code";   // 社員番号
     String EMP_COL_NAME = "name";  // 氏名
-    String EMP_COL_PASS = "name";   // パスワード
+    String EMP_COL_PASS = "password";   // パスワード
     String EMP_COL_ADMIN_FLAG = "admin_flag";   // 管理者権限
     String EMP_COL_CREATED_AT = "created_at";   // 登録日時
     String EMP_COL_UPDATED_AT = "updated_at";   // 更新日時

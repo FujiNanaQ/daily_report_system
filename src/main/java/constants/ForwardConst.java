@@ -10,7 +10,7 @@ public enum ForwardConst {
     ACT("action"),
     ACT_TOP("Top"),
     ACT_EMP("Employee"),
-    ACT_REP("report"),
+    ACT_REP("Report"),
     ACT_AUTH("Auth"),
 
     // command
@@ -31,10 +31,10 @@ public enum ForwardConst {
     FW_ERR_UNKNOWN("error/unknown"),
     FW_TOP_INDEX("topPage/index"),
     FW_LOGIN("login/login"),
-    FW_EMP_INDEX("employee/index"),
-    FW_EMP_SHOW("employee/show"),
-    FW_EMP_NEW("employee/new"),
-    FW_EMP_EDIT("employee/edit"),
+    FW_EMP_INDEX("employees/index"),
+    FW_EMP_SHOW("employees/show"),
+    FW_EMP_NEW("employees/new"),
+    FW_EMP_EDIT("employees/edit"),
     EW_REP_INDEX("reports/index"),
     FW_REP_SHOW("reports/show"),
     FW_REP_NEW("reports/new"),
