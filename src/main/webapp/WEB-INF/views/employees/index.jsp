@@ -24,7 +24,7 @@
                     <th>操作</th>
                 </tr>
                 <c:forEach var="employee" items="${employees}" varStatus="status">
-                    <tr class="raw${status.count % 2}">
+                    <tr class="row${status.count % 2}">
                         <td><c:out value="${employee.code}" /></td>
                         <td><c:out value="${employee.name}" /></td>
                         <td>
