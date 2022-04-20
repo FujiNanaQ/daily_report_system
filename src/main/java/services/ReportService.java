@@ -151,4 +151,23 @@ public class ReportService extends ServiceBase {
         ReportConverter.copyViewToModel(r, rv);
         em.getTransaction().commit();
     }
+
+    /**
+     * いいね数を更新する
+     */
+    public List<String> updateFavorite(ReportView rv) {
+
+        //バリデーションを行う
+        List<String> errors = ReportValidator.validate(rv);
+
+        if (errors.size() == 0) {
+
+            //データを更新する
+            updateInternal(rv);
+        }
+
+        //バリデーションで発生したエラーを返却（エラーがなければ0件の空リスト）
+        return errors;
+    }
+
 }
