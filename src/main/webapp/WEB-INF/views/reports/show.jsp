@@ -29,12 +29,7 @@
                     <td><pre><c:out value="${report.content}" /></pre></td>
                 </tr>
                  <tr>
-                    <th>登録日時</th>
-                    <fmt:parseDate value="${report.createdAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createDay" type="date" />
-                    <td><fmt:formatDate value="${createDay}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
-                </tr>
-                 <tr>
-                    <th>更新日時</th>
+                    <th>日報最終更新日時</th>
                     <fmt:parseDate value="${report.updatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="updateDay" type="date" />
                     <td><fmt:formatDate value="${updateDay}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
                 </tr>
@@ -52,14 +47,17 @@
                 </p>
             </c:when>
             <c:otherwise>
-                <p>
-                    <a href="<c:url value='?action=${actRep}&command=${commFav}&id=${report.id}' />">この日報にいいねする</a>
-                </p>
+                <c:if test="${favorite_find_one == null}">
+                    <p>
+                        <a href="<c:url value='?action=${actRep}&command=${commFav}&id=${report.id}' />">この日報にいいねする</a>
+                    </p>
+                </c:if>
             </c:otherwise>
         </c:choose>
 
-        <p>
-            <a href="<c:url value='?action=${actRep}&command=${commIdx}' />">一覧に戻る</a>
-        </p>
+                <p>
+                    <a href="<c:url value='?action=${actRep}&command=${commIdx}' />">一覧に戻る</a>
+                </p>
+
     </c:param>
 </c:import>

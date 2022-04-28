@@ -7,11 +7,13 @@ import java.util.List;
 import javax.servlet.ServletException;
 
 import actions.views.EmployeeView;
+import actions.views.FavoriteView;
 import actions.views.ReportView;
 import constants.AttributeConst;
 import constants.ForwardConst;
 import constants.JpaConst;
 import constants.MessageConst;
+import services.FavoriteService;
 import services.ReportService;
 
 /**
@@ -22,6 +24,9 @@ public class ReportAction extends ActionBase {
 
     private ReportService service;
 
+    //追記
+    private FavoriteService favoriteService;
+
     /**
      * メソッドを実行する
      */
@@ -30,9 +35,15 @@ public class ReportAction extends ActionBase {
 
         service = new ReportService();
 
+        //追記
+        favoriteService = new FavoriteService();
+
         //メソッドを実行
         invoke();
         service.close();
+
+        //追記
+        favoriteService.close();
     }
 
     /**
@@ -152,12 +163,19 @@ public class ReportAction extends ActionBase {
         //idを条件に日報データを取得する
         ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
 
+        //ログイン中の従業員情報を取得する
+        EmployeeView ev = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+
+
         if (rv == null) {
             //該当の日報データが存在しない場合はエラー画面を表示
             forward(ForwardConst.FW_ERR_UNKNOWN);
 
         } else {
 
+            FavoriteView fv = favoriteService.findOne(ev, rv);
+
+            putRequestScope(AttributeConst.FAV_FIND_ONE, fv); //取得したいいねデータ（取得できなかった場合はnull）
             putRequestScope(AttributeConst.REPORT, rv); //取得した日報データ
 
             //詳細画面を表示
@@ -259,27 +277,51 @@ public class ReportAction extends ActionBase {
             rv.setFavoriteCount(rv.getFavoriteCount() + 1);
 
             //日報データを更新する
-            List<String> errors = service.updateFavorite(rv);
+            service.updateFavorite(rv);
 
-            if (errors.size() > 0) {
-                //更新中にエラーが発生した場合
+            //いいねデータのインスタンスを作成する
+            FavoriteView fv = new FavoriteView(
+                    null,
+                    ev,
+                    rv,
+                    null,
+                    null);
 
-                putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
-                putRequestScope(AttributeConst.REPORT, rv); //日報データ
-                
-                //日報詳細ページに遷移
-                forward(ForwardConst.FW_REP_SHOW);
-                
-            } else {
-                //更新中にエラーがなかった場合
+            //いいね情報登録
+            favoriteService.create(fv);
 
-                //セッションにいいね完了のフラッシュメッセージを設定
-                putSessionScope(AttributeConst.FLUSH, MessageConst.I_FAVORITE.getMessage());
 
-                //一覧画面にリダイレクト
-                redirect(ForwardConst.ACT_REP, ForwardConst.CMD_INDEX);
+            //セッションにいいね完了のフラッシュメッセージを設定
+            putSessionScope(AttributeConst.FLUSH, MessageConst.I_FAVORITE.getMessage());
 
-            }
+            //一覧画面にリダイレクト
+            redirect(ForwardConst.ACT_REP, ForwardConst.CMD_INDEX);
+
         }
+    }
+
+    /**
+     * いいね一覧ページを表示する
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void favoriteIndex() throws ServletException, IOException {
+        ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
+
+        //指定された日報がいいねされたデータを、指定されたページ数の一覧画面に表示する分取得する
+        int page = getPage();
+        List<FavoriteView> favorites = favoriteService.getMinePerPage(rv, page);
+
+        //指定された日報がいいねされたデータの件数を取得
+        long favoriteReportsCount = favoriteService.countAllMine(rv);
+
+        putRequestScope(AttributeConst.FAVORITES, favorites); //取得したいいねデータ
+        putRequestScope(AttributeConst.FAV_COUNT, favoriteReportsCount); //日報がいいねされた数
+        putRequestScope(AttributeConst.PAGE, page); //ページ数
+        putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
+        putRequestScope(AttributeConst.REP_ID, rv.getId()); //指定された日報データ
+
+        //いいね一覧画面を表示
+        forward(ForwardConst.FW_REP_FAVRITE_INDEX);
     }
 }
