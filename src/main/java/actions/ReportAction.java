@@ -8,12 +8,15 @@ import javax.servlet.ServletException;
 
 import actions.views.EmployeeView;
 import actions.views.FavoriteView;
+import actions.views.FollowView;
 import actions.views.ReportView;
 import constants.AttributeConst;
 import constants.ForwardConst;
 import constants.JpaConst;
 import constants.MessageConst;
+import services.EmployeeService;
 import services.FavoriteService;
+import services.FollowService;
 import services.ReportService;
 
 /**
@@ -26,6 +29,8 @@ public class ReportAction extends ActionBase {
 
     //追記
     private FavoriteService favoriteService;
+    private EmployeeService employeeService;
+    private FollowService followService;
 
     /**
      * メソッドを実行する
@@ -37,6 +42,8 @@ public class ReportAction extends ActionBase {
 
         //追記
         favoriteService = new FavoriteService();
+        employeeService = new EmployeeService();
+        followService =new FollowService();
 
         //メソッドを実行
         invoke();
@@ -44,6 +51,8 @@ public class ReportAction extends ActionBase {
 
         //追記
         favoriteService.close();
+        employeeService.close();
+        followService.close();
     }
 
     /**
@@ -167,15 +176,25 @@ public class ReportAction extends ActionBase {
         EmployeeView ev = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
 
 
+
+
         if (rv == null) {
             //該当の日報データが存在しない場合はエラー画面を表示
             forward(ForwardConst.FW_ERR_UNKNOWN);
 
         } else {
 
+            //既にいいね済みかどうか
             FavoriteView fv = favoriteService.findOne(ev, rv);
 
+            //日報の作成者の情報を取得する
+            EmployeeView followedEmployee = employeeService.findOne(rv.getEmployee().getId());
+
+            //既にフォロー済みかどうか
+            FollowView fov = followService.findOne(ev, followedEmployee);
+
             putRequestScope(AttributeConst.FAV_FIND_ONE, fv); //取得したいいねデータ（取得できなかった場合はnull）
+            putRequestScope(AttributeConst.FOL_FIND_ONE, fov); //取得したフォローデータ（取得できなかった場合はnull）
             putRequestScope(AttributeConst.REPORT, rv); //取得した日報データ
 
             //詳細画面を表示

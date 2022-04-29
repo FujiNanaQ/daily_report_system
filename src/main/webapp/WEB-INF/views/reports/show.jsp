@@ -4,9 +4,12 @@
 <%@ page import="constants.ForwardConst" %>
 
 <c:set var="actRep" value="${ForwardConst.ACT_REP.getValue()}" />
+<c:set var="actFol" value="${ForwardConst.ACT_FOL.getValue()}" />
+
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
 <c:set var="commEdt" value="${ForwardConst.CMD_EDIT.getValue()}" />
 <c:set var="commFav" value="${ForwardConst.CMD_FAVORITE_COUNT.getValue()}" />
+<c:set var="commCrt" value="${ForwardConst.CMD_CREATE.getValue()}" />
 
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
@@ -50,6 +53,11 @@
                 <c:if test="${favorite_find_one == null}">
                     <p>
                         <a href="<c:url value='?action=${actRep}&command=${commFav}&id=${report.id}' />">この日報にいいねする</a>
+                    </p>
+                </c:if>
+                <c:if test="${follow_find_one == null}">
+                    <p>
+                        <a href="<c:url value='?action=${actFol}&command=${commCrt}&id=${report.employee.id}' />">この日報の作成者をフォローする</a>
                     </p>
                 </c:if>
             </c:otherwise>

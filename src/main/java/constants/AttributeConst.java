@@ -54,7 +54,11 @@ public enum AttributeConst {
     FAVORITES("favorites"),
     FAV_COUNT("favorite_reports_count"),
     FAV_REPORT("favorite_report"),
-    FAV_FIND_ONE("favorite_find_one");
+    FAV_FIND_ONE("favorite_find_one"),
+
+    //タイムライン
+    FOL_FIND_ONE("follow_find_one"),
+    FOL_COUNT("followed_reports_count");
 
     private final String text;
     private final Integer i;

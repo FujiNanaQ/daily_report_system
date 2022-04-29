@@ -50,18 +50,30 @@ public interface JpaConst {
     String FAV_COL_CREATED_AT = "created_at";
     String FAV_COL_UPDATED_AT = "updated_at";
 
+    //フォローテーブル
+    String TABLE_FOL = "follows"; //テーブル名
+    //フォローテーブルカラム
+    String FOL_COL_ID = "id";
+    String FOL_COL_FOLLOWER_EMP_ID = "follower_employee_id";
+    String FOL_COL_FOLLOWED_EMP_ID = "followed_employee_id";
+    String FOL_COL_CREATED_AT = "created_at";
+    String FOL_COL_UPDATED_AT = "updated_at";
+
     //Entity名
     String ENTITY_EMP = "employee"; //従業員
     String ENTITY_REP = "report"; //日報
     String ENTITY_FAV = "favorite"; //いいね
+    String ENTITY_FOL = "follow"; //フォロー
 
     //JPQL内パラメータ
     String JPQL_PARM_CODE = "code"; //社員番号
     String JPQL_PARM_PASSWORD = "password"; //パスワード
     String JPQL_PARM_EMPLOYEE = "employee"; //従業員
     String JPQL_PARM_REPORT = "report"; //日報
-    String JPQL_PARM_FAV_EMP_ID = "favorite_employee_id";
-    String JPQL_PARM_FAV_REP_ID = "favorite_report_id";
+    String JPQL_PARM_FAV_EMP_ID = "favorite_employee_id"; //いいねした従業員
+    String JPQL_PARM_FAV_REP_ID = "favorite_report_id"; //いいねされた日報
+    String JPQL_PARM_FOLLOWER = "follower_employee"; //フォローした従業員
+    String JPQL_PARM_FOLLOWED = "followed_employee"; //フォローされた従業員
 
     //NamedQueryの nameとquery
     //全ての従業員をidの降順に取得する
@@ -97,4 +109,13 @@ public interface JpaConst {
     //指定した従業員と指定した日報のデータを条件にデータを取得する
     String Q_FAV_GET_BY_EMPLOYEE_AND_REPORT = ENTITY_FAV + ".getByEmployeeAndReport";
     String Q_FAV_GET_BY_EMPLOYEE_AND_REPORT_DEF = "SELECT f FROM Favorite AS f WHERE f.employee = :" + JPQL_PARM_FAV_EMP_ID + " AND f.report = :" + JPQL_PARM_FAV_REP_ID;
+    //指定した従業員がフォローしている従業員の日報を、更新日時の降順で取得する
+    String Q_REP_GET_ALL_FOLLOWED = ENTITY_REP + ".getAllFollowed";
+    String Q_REP_GET_ALL_FOLLOWED_DEF = "SELECT r FROM Report AS r INNER JOIN Follow AS f ON r.employee = f.followedEmployee WHERE f.followerEmployee = :" + JPQL_PARM_FOLLOWER + " ORDER BY r.updatedAt DESC";
+    //指定した従業員がフォローしている従業員の日報の件数を取得する
+    String Q_REP_COUNT_ALL_FOLLOWED = ENTITY_REP + ".countAllFollowed";
+    String Q_REP_COUNT_ALL_FOLLOWED_DEF = "SELECT COUNT(r) FROM Report AS r INNER JOIN Follow AS f ON r.employee = f.followedEmployee WHERE f.followerEmployee = :" + JPQL_PARM_FOLLOWER;
+    //ログイン中従業員と指定した従業員のデータを条件にデータを取得する
+    String Q_FOL_GET_BY_FOLLOWER_AND_FOLLOWED = ENTITY_FOL + ".getByFollowerAndFollowed";
+    String Q_FOL_GET_BY_FOLLOWER_AND_FOLLOWED_DEF = "SELECT f FROM Follow AS f WHERE f.followerEmployee = :" + JPQL_PARM_FOLLOWER + " AND f.followedEmployee = :" + JPQL_PARM_FOLLOWED;
 }
