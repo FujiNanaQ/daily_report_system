@@ -10,6 +10,7 @@
 <c:set var="commEdt" value="${ForwardConst.CMD_EDIT.getValue()}" />
 <c:set var="commFav" value="${ForwardConst.CMD_FAVORITE_COUNT.getValue()}" />
 <c:set var="commCrt" value="${ForwardConst.CMD_CREATE.getValue()}" />
+<c:set var="commDst" value="${ForwardConst.CMD_DESTROY.getValue()}" />
 
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
@@ -55,11 +56,18 @@
                         <a href="<c:url value='?action=${actRep}&command=${commFav}&id=${report.id}' />">この日報にいいねする</a>
                     </p>
                 </c:if>
-                <c:if test="${follow_find_one == null}">
-                    <p>
-                        <a href="<c:url value='?action=${actFol}&command=${commCrt}&id=${report.employee.id}' />">この日報の作成者をフォローする</a>
-                    </p>
-                </c:if>
+                <c:choose>
+                    <c:when test="${follow_find_one == null}">
+                        <p>
+                            <a href="<c:url value='?action=${actFol}&command=${commCrt}&id=${report.employee.id}' />">この日報の作成者をフォローする</a>
+                        </p>
+                    </c:when>
+                    <c:otherwise>
+                        <p>
+                            <a href="<c:url value='?action=${actFol}&command=${commDst}&id=${report.employee.id}' />">この日報の作成者のフォローを解除する</a>
+                        </p>
+                    </c:otherwise>
+                </c:choose>
             </c:otherwise>
         </c:choose>
 

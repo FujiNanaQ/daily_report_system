@@ -118,4 +118,10 @@ public interface JpaConst {
     //ログイン中従業員と指定した従業員のデータを条件にデータを取得する
     String Q_FOL_GET_BY_FOLLOWER_AND_FOLLOWED = ENTITY_FOL + ".getByFollowerAndFollowed";
     String Q_FOL_GET_BY_FOLLOWER_AND_FOLLOWED_DEF = "SELECT f FROM Follow AS f WHERE f.followerEmployee = :" + JPQL_PARM_FOLLOWER + " AND f.followedEmployee = :" + JPQL_PARM_FOLLOWED;
+    //ログイン中の従業員がフォローしているデータを全件取得する
+    String Q_FOL_GET_ALL_MINE = ENTITY_FOL + ".getAllMine";
+    String Q_FOL_GET_ALL_MINE_DEF = "SELECT f FROM Follow AS f WHERE f.followerEmployee = :" + JPQL_PARM_FOLLOWER;
+    //ログイン中の従業員がフォローしているデータの件数を取得する
+    String Q_FOL_COUNT_ALL_MINE = ENTITY_FOL + ".countAllMine";
+    String Q_FOL_COUNT_ALL_MINE_DEF = "SELECT COUNT(f) FROM Follow AS f WHERE f.followerEmployee = :" + JPQL_PARM_FOLLOWER;
 }

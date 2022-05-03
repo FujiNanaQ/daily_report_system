@@ -32,6 +32,7 @@
                         </c:if>
                         <a href="<c:url value='?action=${actRep}&command=${commIdx}' />">日報管理</a>&nbsp;
                         <a href="<c:url value='?action=${actFol}&command=${commTml}' />">タイムライン</a>&nbsp;
+                        <a href="<c:url value='?action=${actFol}&command=${commIdx}' />">フォロー一覧</a>&nbsp;
                     </c:if>
                 </div>
                 <c:if test="${sessionScope.login_employee != null}">

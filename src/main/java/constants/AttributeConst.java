@@ -58,7 +58,11 @@ public enum AttributeConst {
 
     //タイムライン
     FOL_FIND_ONE("follow_find_one"),
-    FOL_COUNT("followed_reports_count");
+    FOL_COUNT("followed_reports_count"),
+
+    //フォロー一覧
+    FOLLOWS("follows"),
+    FOL_EMP_COUNT("followedEmployeeCount");
 
     private final String text;
     private final Integer i;

@@ -119,4 +119,63 @@ public class FollowAction extends ActionBase {
         forward(ForwardConst.FW_FOL_TIMELINE);
     }
 
+    /**
+     * データを削除する
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void destroy() throws ServletException, IOException {
+
+        //idを条件に、フォローする従業員データを取得
+        EmployeeView followedEmployee = employeeService.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+
+        //セッションからログイン中の従業員情報を取得
+        EmployeeView followerEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+
+       //ログインしている従業員と、日報作成者の従業員を条件にデータを取得（ない場合はnull）
+        FollowView fov = service.findOne(followerEmployee, followedEmployee);
+
+        if (fov == null) {
+
+            //フォローデータが見つからなかった場合はエラー画面に遷移
+            forward(ForwardConst.FW_ERR_UNKNOWN);
+        } else {
+
+            //データを削除
+            service.destroy(fov);
+
+            //セッションにフォロー解除完了のフラッシュメッセージを設定
+            putSessionScope(AttributeConst.FLUSH, MessageConst.I_DELETED_FOLLOW.getMessage());
+
+            //タイムラインページへリダイレクト
+            redirect(ForwardConst.ACT_FOL, ForwardConst.CMD_TIMELINE);
+        }
+
+    }
+
+    /**
+     * フォローしてる人一覧
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void index() throws ServletException, IOException {
+
+        //セッションからログイン中の従業員情報を取得
+        EmployeeView followerEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+
+        //ログイン中の従業員を条件にフォローしているデータのリストを取得
+        int page = getPage();
+        List<FollowView> follows = service.getMinePerPage(followerEmployee, page);
+
+        //ログイン中の従業員がフォローしているデータの件数を取得する
+        long followedEmployeeCount = service.countAllMine(followerEmployee);
+
+        putRequestScope(AttributeConst.FOLLOWS, follows); //取得した日報データ
+        putRequestScope(AttributeConst.FOL_EMP_COUNT, followedEmployeeCount); //日報の件数
+        putRequestScope(AttributeConst.PAGE, page); //ページ数
+        putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
+
+        forward(ForwardConst.FW_FOL_INDEX);
+    }
+
 }
